@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - CBT Asesmen Projek IPAS</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                            950: '#022c22'
+                        },
+                        teal: {
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            900: '#134e4a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- KaTeX for Math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f1f5f9;
+        }
+        
+        /* Premium Background Pattern for IPAS (Science & Nature) */
+        .bg-ipas-pattern {
+            background: linear-gradient(135deg, #064e3b 0%, #134e4a 100%);
+            position: relative;
+        }
+        .bg-ipas-pattern::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0.1;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- Atom --%3E%3Ccircle cx='30' cy='30' r='5'/%3E%3Cellipse cx='30' cy='30' rx='16' ry='6' transform='rotate(30 30 30)'/%3E%3Cellipse cx='30' cy='30' rx='16' ry='6' transform='rotate(-30 30 30)'/%3E%3C!-- Leaf --%3E%3Cpath d='M100 20c0 14-10 24-24 24 0-14 10-24 24-24z'/%3E%3Cpath d='M76 44c12 0 20-8 20-20'/%3E%3C!-- Planet --%3E%3Ccircle cx='30' cy='110' r='10'/%3E%3Cellipse cx='30' cy='110' rx='18' ry='5' transform='rotate(-15 30 110)'/%3E%3C!-- Energy --%3E%3Cpath d='M105 85l-12 16h10l-6 16 16-20h-10z'/%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: repeat;
+            z-index: 0;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .glass-dark {
+            background: rgba(2, 44, 34, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        /* Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #10b981; border-radius: 4px; }
+        
+        /* Print Styles */
+        @media print {
+            body { background: white !important; }
+            .bg-ipas-pattern, .glass-card, .glass-dark { background: white !important; backdrop-filter: none !important; border: none !important; }
+            .bg-ipas-pattern::before { display: none !important; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            #dashboard-view { padding: 0 !important; margin: 0 !important; }
+            .print-table { width: 100%; border-collapse: collapse; }
+            .print-table th, .print-table td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; }
+            .print-table th { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen">
+
+    <!-- 1. LOGIN SCREEN (Full Screen Gorgeous Design) -->
+    <div id="login-view" class="fixed inset-0 z-50 flex items-center justify-center bg-ipas-pattern transition-opacity duration-500">
+        <!-- Floating decorative orbs -->
+        <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div class="absolute top-1/3 right-1/4 w-72 h-72 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+
+        <div class="glass-card p-8 sm:p-10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] w-full max-w-md text-center relative z-10 mx-4 transform transition-all hover:scale-[1.01] duration-300">
+            <!-- School Logo / Icon -->
+            <div class="w-20 h-20 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-6 text-white text-4xl shadow-lg border-2 border-white">
+                <i class="fa-solid fa-microscope"></i>
+            </div>
+            
+            <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">Portal Koordinator</h2>
+            <p class="text-sm text-slate-500 font-medium mt-1 mb-8 uppercase tracking-widest">Asesmen Projek IPAS</p>
+            
+            <form id="pin-form" onsubmit="verifyPin(event)" class="space-y-6">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide text-left ml-1">PIN Keamanan (6 Digit)</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-key"></i>
+                        </span>
+                        <input type="password" id="admin-pin" placeholder="••••••" maxlength="6" required
+                            class="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-slate-200 rounded-2xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 text-center tracking-[0.5em] text-xl font-black text-slate-700 outline-none transition-all shadow-inner">
+                    </div>
+                </div>
+                
+                <div id="pin-error" class="hidden text-rose-600 text-xs font-bold mb-4 bg-rose-50 py-3 rounded-xl border border-rose-200 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i> PIN yang Anda masukkan salah!
+                </div>
+
+                <button type="submit" id="btn-login" class="w-full bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-bold py-4 rounded-2xl transition-all shadow-xl hover:shadow-emerald-500/30 flex items-center justify-center gap-2 text-sm uppercase tracking-wide active:scale-[0.98]">
+                    Buka Dashboard <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+            
+            <p class="text-[10px] text-slate-400 mt-8 font-medium">SMK Negeri 1 Bulakamba &copy; 2026</p>
+        </div>
+    </div>
+
+    <!-- 2. MAIN DASHBOARD (Hidden initially) -->
+    <div id="dashboard-view" class="hidden flex flex-col min-h-screen bg-slate-50">
+        
+        <!-- HEADER NAVBAR -->
+        <header class="bg-ipas-pattern text-white shadow-xl sticky top-0 z-30 no-print">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative z-10">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/20 p-2 rounded-xl backdrop-blur-sm border border-white/20">
+                        <i class="fa-solid fa-flask text-emerald-100 text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight tracking-tight drop-shadow-md">Admin Projek IPAS</h1>
+                        <p class="text-[10px] text-emerald-200 uppercase tracking-widest font-medium">SMK Negeri 1 Bulakamba</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold bg-emerald-500/30 border border-emerald-400/30 px-3 py-1.5 rounded-full backdrop-blur-md">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Koordinator Aktif
+                    </span>
+                    <button onclick="logout()" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 hover:bg-rose-500/80 border border-white/10 hover:border-rose-400 transition-all text-emerald-50 hover:text-white" title="Kunci Aplikasi">
+                        <i class="fa-solid fa-power-off"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+            <!-- HERO WELCOME & QUICK STATS -->
+            <div class="no-print space-y-6">
+                <div class="glass-dark rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl overflow-hidden relative">
+                    <!-- Decor inside hero -->
+                    <i class="fa-solid fa-atom text-9xl absolute -bottom-10 -right-10 text-emerald-500/10 transform -rotate-12"></i>
+                    
+                    <div class="relative z-10 text-center md:text-left">
+                        <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight mb-2">Dashboard Evaluasi CBT</h2>
+                        <p class="text-emerald-100 font-medium text-sm">Kelola Bank Soal, pantau nilai siswa, dan konfigurasi server cloud dalam satu panel terpadu.</p>
+                    </div>
+                    
+                    <div class="relative z-10 flex gap-3 w-full md:w-auto">
+                        <button onclick="switchTab('bank')" class="flex-1 md:flex-none px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-bold rounded-xl transition shadow-lg text-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-book-open"></i> Kelola Soal
+                        </button>
+                        <button onclick="switchTab('rekap')" class="flex-1 md:flex-none px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold rounded-xl transition shadow-lg text-sm flex items-center justify-center gap-2 backdrop-blur-md">
+                            <i class="fa-solid fa-chart-pie"></i> Lihat Nilai
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STATS GRID -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex items-center gap-4 transition hover:shadow-md">
+                        <div class="w-12 h-12 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Total Bank Soal</p>
+                            <h4 class="text-2xl font-black text-slate-800" id="stat-soal">0</h4>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex items-center gap-4 transition hover:shadow-md">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Total Pengerjaan</p>
+                            <h4 class="text-2xl font-black text-slate-800" id="stat-peserta">0</h4>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex items-center gap-4 transition hover:shadow-md">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Status Server Cloud</p>
+                            <h4 class="text-sm font-black text-emerald-600 flex items-center gap-1.5 mt-1" id="stat-server">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Terhubung
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABS NAVIGATION (Modern Pill Design) -->
+            <div class="no-print bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200 inline-flex w-full sm:w-auto">
+                <button onclick="switchTab('bank')" id="tab-btn-bank" class="flex-1 sm:flex-none px-6 py-2.5 text-sm font-bold rounded-xl bg-emerald-50 text-emerald-700 transition shadow-sm border border-emerald-100">
+                    <i class="fa-solid fa-book-bookmark mr-1.5"></i> Bank Soal & Pengaturan
+                </button>
+                <button onclick="switchTab('rekap')" id="tab-btn-rekap" class="flex-1 sm:flex-none px-6 py-2.5 text-sm font-bold rounded-xl bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition">
+                    <i class="fa-solid fa-chart-line mr-1.5"></i> Rekap Hasil Ujian
+                </button>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- TAB 1: BANK SOAL & PENGATURAN -->
+            <!-- ========================================== -->
+            <section id="tab-bank" class="space-y-6">
+                
+                <!-- Cloud Config Card -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 no-print">
+                    <h3 class="text-sm font-black text-slate-800 mb-4 flex items-center gap-2 uppercase tracking-wide">
+                        <i class="fa-brands fa-google-drive text-emerald-600 text-lg"></i> Integrasi Google Apps Script
+                    </h3>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="url" id="gas-url" placeholder="https://script.google.com/macros/s/.../exec" 
+                            class="flex-1 px-4 py-3 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-slate-50 transition">
+                        <button onclick="saveGasUrlAndSync()" class="px-6 py-3 bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold rounded-xl transition shadow-lg shadow-slate-200 flex items-center justify-center gap-2 whitespace-nowrap active:scale-95">
+                            <i class="fa-solid fa-link"></i> Sambungkan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Settings & Filters Card -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col lg:flex-row justify-between gap-6 no-print">
+                    
+                    <!-- Filters -->
+                    <div class="flex-1">
+                        <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">Filter Elemen IPAS</label>
+                        <div class="relative">
+                            <select id="filter-category" onchange="applyCategoryFilter()" class="w-full px-4 py-3 appearance-none border border-slate-300 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50 cursor-pointer shadow-inner">
+                                <option value="ALL">Semua Elemen / Kategori</option>
+                                <option value="Zat dan Perubahannya">Zat dan Perubahannya</option>
+                                <option value="Ekosistem & Pencemaran Lingkungan">Ekosistem & Pencemaran Lingkungan</option>
+                                <option value="Energi dan Perubahannya">Energi dan Perubahannya</option>
+                                <option value="Bumi dan Antariksa">Bumi dan Antariksa</option>
+                                <option value="Konektivitas Ruang & Waktu">Konektivitas Ruang & Waktu</option>
+                                <option value="Perilaku Ekonomi & Kesejahteraan">Perilaku Ekonomi & Kesejahteraan</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Token & Shuffle -->
+                    <div class="flex-1 lg:border-l border-slate-200 lg:pl-6 flex flex-col justify-end">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-end gap-3">
+                            <div class="w-full sm:w-auto">
+                                <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">Token Ujian</label>
+                                <input type="text" id="setting-token" value="IPAS2026" class="w-full sm:w-32 px-4 py-3 text-center font-mono font-black uppercase border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50 shadow-inner">
+                            </div>
+                            <div class="flex flex-1 items-center gap-3 bg-slate-50 px-4 py-3 rounded-xl border border-slate-200 shadow-inner w-full sm:w-auto justify-center">
+                                <label class="flex items-center gap-2 text-sm font-bold text-slate-700 cursor-pointer hover:text-emerald-600 transition">
+                                    <input type="checkbox" id="setting-acak-soal" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4"> Acak Soal
+                                </label>
+                                <div class="w-px h-5 bg-slate-300"></div>
+                                <label class="flex items-center gap-2 text-sm font-bold text-slate-700 cursor-pointer hover:text-emerald-600 transition">
+                                    <input type="checkbox" id="setting-acak-opsi" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4"> Acak Opsi
+                                </label>
+                            </div>
+                            <button onclick="saveSettingsToCloud()" class="w-full sm:w-auto px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white text-sm font-bold rounded-xl transition shadow-lg shadow-teal-200 flex items-center justify-center gap-2 active:scale-95">
+                                <i class="fa-solid fa-floppy-disk"></i> Simpan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questions Table Card -->
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden no-print">
+                    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-white">
+                        <div>
+                            <h3 class="font-black text-slate-800 text-lg flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-emerald-500"></i> Daftar Soal Evaluasi
+                            </h3>
+                            <p class="text-xs font-medium text-slate-500 mt-1">Data sinkronisasi: <span id="badge-total-soal-label" class="text-emerald-600 font-bold">0 Soal</span></p>
+                        </div>
+                        <button onclick="openModal('modal-soal')" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold rounded-xl transition shadow-lg shadow-emerald-200 flex items-center gap-2 active:scale-95">
+                            <i class="fa-solid fa-plus"></i> Tambah Soal Baru
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap sm:whitespace-normal">
+                            <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-y border-slate-200">
+                                <tr>
+                                    <th class="p-4 w-12 text-center font-bold">No</th>
+                                    <th class="p-4 font-bold">Elemen / Kategori</th>
+                                    <th class="p-4 font-bold text-center">Bentuk Soal</th>
+                                    <th class="p-4 font-bold min-w-[250px]">Pertanyaan</th>
+                                    <th class="p-4 font-bold text-center w-28">Kunci</th>
+                                    <th class="p-4 font-bold text-center w-40">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-bank-body" class="divide-y divide-slate-100 bg-white">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div id="bank-empty-state" class="hidden p-12 text-center bg-slate-50/50">
+                        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl text-slate-300">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-slate-700 mb-1">Bank Soal Kosong</h4>
+                        <p class="text-sm text-slate-500">Silakan tambahkan soal baru atau sinkronkan dengan database cloud.</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TAB 2: REKAP HASIL UJIAN -->
+            <!-- ========================================== -->
+            <section id="tab-rekap" class="hidden space-y-6">
+                
+                <!-- Rekap Controls -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 no-print">
+                    <div>
+                        <h3 class="font-black text-slate-800 text-lg flex items-center gap-2">
+                            <i class="fa-solid fa-users-viewfinder text-emerald-500"></i> Rekap Nilai Siswa
+                        </h3>
+                        <p class="text-xs font-medium text-slate-500 mt-1">Data diambil secara real-time dari Google Sheets.</p>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                        <div class="relative flex-1 md:flex-none">
+                            <select id="filter-kelas" onchange="renderTableHasil()" class="w-full appearance-none px-4 py-2.5 pr-8 border border-slate-300 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50">
+                                <option value="ALL">Semua Kelas</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500"><i class="fa-solid fa-chevron-down text-xs"></i></div>
+                        </div>
+                        <button onclick="fetchHasilCloud()" class="flex-1 md:flex-none px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold rounded-xl transition shadow-lg shadow-slate-200 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-rotate"></i> Refresh
+                        </button>
+                        <button onclick="window.print()" class="w-full md:w-auto px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-sm font-bold rounded-xl transition shadow-lg shadow-teal-200 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-print"></i> Cetak PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Rekap Table -->
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="print-only hidden text-center mb-6 pt-8 pb-4 border-b-2 border-slate-800">
+                        <h2 class="text-2xl font-black uppercase tracking-widest">Laporan Hasil Asesmen Projek IPAS</h2>
+                        <p class="text-base font-bold mt-1">SMK Negeri 1 Bulakamba</p>
+                        <p class="text-sm mt-1">Filter Data: <span id="print-class-target" class="font-bold border-b border-slate-400 pb-0.5">Semua Kelas</span></p>
+                    </div>
+                    
+                    <div class="overflow-x-auto p-4 sm:p-0">
+                        <table class="w-full text-left text-sm print-table whitespace-nowrap sm:whitespace-normal">
+                            <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-y border-slate-200">
+                                <tr>
+                                    <th class="p-4 w-12 text-center font-bold">No</th>
+                                    <th class="p-4 font-bold">Waktu Selesai</th>
+                                    <th class="p-4 font-bold">Nama Peserta</th>
+                                    <th class="p-4 font-bold">Kelas</th>
+                                    <th class="p-4 font-bold">Jurusan</th>
+                                    <th class="p-4 font-bold">Topik / Elemen</th>
+                                    <th class="p-4 font-bold text-center text-emerald-700">Skor Akhir</th>
+                                    <th class="p-4 font-bold text-center no-print w-20">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-rekap-body" class="divide-y divide-slate-100 bg-white">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div id="rekap-empty-state" class="hidden p-12 text-center bg-slate-50/50 no-print">
+                        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl text-slate-300">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-slate-700 mb-1">Belum Ada Data</h4>
+                        <p class="text-sm text-slate-500">Hasil pengerjaan siswa akan muncul di sini secara otomatis.</p>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+        
+        <footer class="bg-white border-t border-slate-200 py-6 mt-auto no-print text-center">
+            <p class="text-xs font-semibold text-slate-500 flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-leaf text-emerald-500"></i> CBT Asesmen Projek IPAS &copy; 2026
+            </p>
+        </footer>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODALS -->
+    <!-- ========================================== -->
+    
+    <!-- MODAL: ADD / EDIT SOAL (Premium UI) -->
+    <div id="modal-soal" class="fixed inset-0 z-[60] hidden bg-slate-900/60 backdrop-blur-sm overflow-y-auto p-4 sm:p-6 no-print flex items-center justify-center">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-auto relative overflow-hidden flex flex-col max-h-[90vh]">
+            
+            <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-white shrink-0">
+                <h3 id="modal-soal-title" class="font-black text-slate-800 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-emerald-500"></i> Form Soal IPAS
+                </h3>
+                <button onclick="closeModal('modal-soal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto custom-scrollbar flex-1 bg-slate-50/30">
+                <form id="form-soal" onsubmit="saveSoal(event)" class="space-y-5">
+                    <input type="hidden" id="soal-id">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                            <label class="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wide">Kategori IPAS <span class="text-rose-500">*</span></label>
+                            <select id="soal-category" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50">
+                                <option value="Zat dan Perubahannya">Zat dan Perubahannya</option>
+                                <option value="Ekosistem & Pencemaran Lingkungan">Ekosistem & Pencemaran Lingkungan</option>
+                                <option value="Energi dan Perubahannya">Energi dan Perubahannya</option>
+                                <option value="Bumi dan Antariksa">Bumi dan Antariksa</option>
+                                <option value="Konektivitas Ruang & Waktu">Konektivitas Ruang & Waktu</option>
+                                <option value="Perilaku Ekonomi & Kesejahteraan">Perilaku Ekonomi & Kesejahteraan</option>
+                            </select>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                            <label class="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wide">Bentuk Soal <span class="text-rose-500">*</span></label>
+                            <select id="soal-type" onchange="toggleFormSoalType()" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50">
+                                <option value="pg">PG Sederhana (1 Jawaban)</option>
+                                <option value="pgk_checkbox">PG Kompleks (Banyak Jawaban)</option>
+                                <option value="pgk_matrix">PG Matriks Kategori</option>
+                            </select>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                            <label class="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wide">Bobot (Poin) <span class="text-rose-500">*</span></label>
+                            <input type="number" id="soal-weight" value="3" min="1" max="50" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-black text-emerald-700 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50">
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wide flex justify-between">
+                                <span>Wacana / Stimulus (Opsional)</span>
+                                <span class="normal-case font-medium text-emerald-600">Dukung KaTeX ($...$ atau $$...$$)</span>
+                            </label>
+                            <textarea id="soal-stimulus" rows="3" class="w-full p-4 rounded-2xl border border-slate-200 shadow-sm text-sm focus:ring-2 focus:ring-emerald-500 outline-none custom-scrollbar" placeholder="Ketikkan teks bacaan panjang, artikel, atau data observasi di sini..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wide">Pertanyaan Utama <span class="text-rose-500">*</span></label>
+                            <textarea id="soal-question" rows="2" required class="w-full p-4 rounded-2xl border border-slate-200 shadow-sm text-sm font-bold text-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none custom-scrollbar" placeholder="Apa yang terjadi jika..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wide">URL Gambar Pendukung (Opsional)</label>
+                            <input type="text" id="soal-image" placeholder="https://..." class="w-full px-4 py-3 rounded-2xl border border-slate-200 shadow-sm text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                        </div>
+                    </div>
+
+                    <!-- OPTION AREA -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                        <h4 class="text-xs font-black text-slate-700 mb-4 border-b border-slate-100 pb-2 uppercase tracking-wide flex items-center gap-2">
+                            <i class="fa-solid fa-list text-emerald-500"></i> Daftar Pilihan Jawaban
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="flex items-center gap-2"><span class="font-black text-slate-400 w-5">A.</span><input type="text" id="opt-A" placeholder="Jawaban A (Wajib)" required class="flex-1 p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50"></div>
+                            <div class="flex items-center gap-2"><span class="font-black text-slate-400 w-5">B.</span><input type="text" id="opt-B" placeholder="Jawaban B (Wajib)" required class="flex-1 p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50"></div>
+                            <div class="flex items-center gap-2"><span class="font-black text-slate-400 w-5">C.</span><input type="text" id="opt-C" placeholder="Jawaban C (Opsional)" class="flex-1 p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50"></div>
+                            <div class="flex items-center gap-2"><span class="font-black text-slate-400 w-5">D.</span><input type="text" id="opt-D" placeholder="Jawaban D (Opsional)" class="flex-1 p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50"></div>
+                            <div class="flex items-center gap-2 md:col-span-2 md:w-1/2 md:pr-2"><span class="font-black text-slate-400 w-5">E.</span><input type="text" id="opt-E" placeholder="Jawaban E (Opsional)" class="flex-1 p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50"></div>
+                        </div>
+                    </div>
+
+                    <!-- KEY ANSWER AREA -->
+                    <div class="bg-emerald-50 p-5 rounded-2xl border border-emerald-200 shadow-sm relative overflow-hidden">
+                        <!-- BG Icon -->
+                        <i class="fa-solid fa-key absolute -bottom-5 -right-5 text-7xl text-emerald-500/10 transform rotate-12"></i>
+                        
+                        <h4 class="text-xs font-black text-emerald-900 mb-4 border-b border-emerald-200/50 pb-2 uppercase tracking-wide relative z-10">Konfigurasi Kunci Jawaban Benar</h4>
+                        
+                        <div class="relative z-10">
+                            <!-- Mode PG Biasa -->
+                            <div id="key-pg" class="block">
+                                <select id="key-pg-select" class="w-full md:w-64 p-3 rounded-xl border border-emerald-300 bg-white text-sm font-black text-emerald-800 focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer shadow-sm">
+                                    <option value="A">Pilihan A</option>
+                                    <option value="B">Pilihan B</option>
+                                    <option value="C">Pilihan C</option>
+                                    <option value="D">Pilihan D</option>
+                                    <option value="E">Pilihan E</option>
+                                </select>
+                            </div>
+
+                            <!-- Mode PG Checkbox -->
+                            <div id="key-checkbox" class="hidden space-y-3">
+                                <p class="text-xs text-emerald-700 font-bold">Pilih lebih dari satu opsi yang benar:</p>
+                                <div class="flex flex-wrap gap-4 font-black text-emerald-900 text-sm">
+                                    <label class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-emerald-200 shadow-sm cursor-pointer hover:border-emerald-400 transition"><input type="checkbox" name="key_cb" value="A" class="w-5 h-5 text-emerald-600 rounded border-emerald-300 focus:ring-emerald-500"> A</label>
+                                    <label class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-emerald-200 shadow-sm cursor-pointer hover:border-emerald-400 transition"><input type="checkbox" name="key_cb" value="B" class="w-5 h-5 text-emerald-600 rounded border-emerald-300 focus:ring-emerald-500"> B</label>
+                                    <label class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-emerald-200 shadow-sm cursor-pointer hover:border-emerald-400 transition"><input type="checkbox" name="key_cb" value="C" class="w-5 h-5 text-emerald-600 rounded border-emerald-300 focus:ring-emerald-500"> C</label>
+                                    <label class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-emerald-200 shadow-sm cursor-pointer hover:border-emerald-400 transition"><input type="checkbox" name="key_cb" value="D" class="w-5 h-5 text-emerald-600 rounded border-emerald-300 focus:ring-emerald-500"> D</label>
+                                    <label class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-emerald-200 shadow-sm cursor-pointer hover:border-emerald-400 transition"><input type="checkbox" name="key_cb" value="E" class="w-5 h-5 text-emerald-600 rounded border-emerald-300 focus:ring-emerald-500"> E</label>
+                                </div>
+                            </div>
+
+                            <!-- Mode Matriks -->
+                            <div id="key-matrix" class="hidden space-y-4">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs gap-3">
+                                    <span class="text-emerald-800 font-bold">Atur label kategori Matriks:</span>
+                                    <select id="matrix-type-select" class="p-2 rounded-lg border border-emerald-300 font-bold bg-white outline-none shadow-sm focus:ring-2 focus:ring-emerald-500 cursor-pointer">
+                                        <option value="bs">Benar (B) / Salah (S)</option>
+                                        <option value="sesuai">Sesuai / Tidak Sesuai</option>
+                                    </select>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                    <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-emerald-200 shadow-sm">
+                                        <span class="font-black text-slate-400">Pernyataan A</span>
+                                        <select id="mat-A" class="border border-slate-200 rounded-lg p-1.5 text-xs font-bold bg-slate-50 outline-none"><option value="B">Kategori 1 (B)</option><option value="S">Kategori 2 (S)</option></select>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-emerald-200 shadow-sm">
+                                        <span class="font-black text-slate-400">Pernyataan B</span>
+                                        <select id="mat-B" class="border border-slate-200 rounded-lg p-1.5 text-xs font-bold bg-slate-50 outline-none"><option value="B">Kategori 1 (B)</option><option value="S">Kategori 2 (S)</option></select>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-emerald-200 shadow-sm">
+                                        <span class="font-black text-slate-400">Pernyataan C</span>
+                                        <select id="mat-C" class="border border-slate-200 rounded-lg p-1.5 text-xs font-bold bg-slate-50 outline-none"><option value="B">Kategori 1 (B)</option><option value="S">Kategori 2 (S)</option></select>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-emerald-200 shadow-sm">
+                                        <span class="font-black text-slate-400">Pernyataan D</span>
+                                        <select id="mat-D" class="border border-slate-200 rounded-lg p-1.5 text-xs font-bold bg-slate-50 outline-none"><option value="B">Kategori 1 (B)</option><option value="S">Kategori 2 (S)</option></select>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-emerald-200 shadow-sm md:col-span-2 md:w-[49%]">
+                                        <span class="font-black text-slate-400">Pernyataan E</span>
+                                        <select id="mat-E" class="border border-slate-200 rounded-lg p-1.5 text-xs font-bold bg-slate-50 outline-none"><option value="B">Kategori 1 (B)</option><option value="S">Kategori 2 (S)</option></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-400 mb-1.5 uppercase tracking-wide">Pembahasan Singkat (Opsional)</label>
+                        <textarea id="soal-discussion" rows="2" class="w-full p-4 rounded-2xl border border-slate-200 shadow-sm text-sm focus:ring-2 focus:ring-emerald-500 outline-none custom-scrollbar bg-white" placeholder="Sertakan referensi atau rumus di sini..."></textarea>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="p-5 border-t border-slate-100 bg-white shrink-0 flex justify-end gap-3 rounded-b-3xl">
+                <button type="button" onclick="closeModal('modal-soal')" class="px-6 py-2.5 rounded-xl bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 transition text-sm">Batal</button>
+                <button type="submit" form="form-soal" id="btn-save-soal" class="px-8 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold transition shadow-lg shadow-emerald-200 text-sm flex items-center gap-2 active:scale-95">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Simpan ke Cloud
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL: PREVIEW SOAL -->
+    <div id="modal-preview" class="fixed inset-0 z-[60] hidden bg-slate-900/70 backdrop-blur-sm overflow-y-auto p-4 sm:p-6 no-print flex items-center justify-center">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-auto relative overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-white shrink-0">
+                <h3 class="font-black text-slate-800 text-base flex items-center gap-2"><i class="fa-solid fa-eye text-emerald-500"></i> Pratinjau Tampilan Siswa</h3>
+                <button onclick="closeModal('modal-preview')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div id="preview-content" class="p-6 text-sm text-slate-800 overflow-y-auto custom-scrollbar flex-1 space-y-5 bg-slate-50/50">
+                <!-- Injected via JS -->
+            </div>
+            
+            <div class="p-5 bg-emerald-50 border-t border-emerald-100 shrink-0">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-[10px] font-black text-emerald-800 uppercase tracking-widest bg-emerald-200/50 px-2 py-1 rounded">Kunci Jawaban</span>
+                    <span id="preview-key" class="font-black text-lg text-emerald-700 font-mono"></span>
+                </div>
+                <p id="preview-discussion" class="text-xs text-emerald-800 italic bg-white/80 p-3 rounded-xl border border-emerald-100"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- GLOBAL LOADING OVERLAY (Glass) -->
+    <div id="loading-overlay" class="fixed inset-0 z-[70] hidden bg-white/70 backdrop-blur-md flex items-center justify-center no-print">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl flex flex-col items-center border border-slate-100">
+            <div class="relative w-16 h-16 flex items-center justify-center mb-3">
+                <div class="absolute inset-0 border-4 border-emerald-100 rounded-full"></div>
+                <div class="absolute inset-0 border-4 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
+                <i class="fa-solid fa-cloud text-emerald-500 text-xl"></i>
+            </div>
+            <span class="text-sm font-bold text-slate-700" id="loading-text">Sinkronisasi Cloud...</span>
+        </div>
+    </div>
+
+    <!-- CUSTOM ALERTS (Toasts) -->
+    <div id="alert-container" class="fixed bottom-6 right-6 z-[80] flex flex-col gap-3 no-print pointer-events-none"></div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC -->
+    <!-- ========================================== -->
+    <script>
+        // --- GLOBAL CONFIG & STATE ---
+        const PIN_CORRECT = "505609";
+        let state = {
+            gasUrl: localStorage.getItem('ipas_gas_url') || '',
+            questions: [],
+            results: [],
+            isLoggedIn: sessionStorage.getItem('admin_logged_in') === 'true',
+            activeCategory: 'ALL'
+        };
+
+        // --- INIT ---
+        window.onload = () => {
+            if(state.isLoggedIn) {
+                showDashboard();
+                document.getElementById('gas-url').value = state.gasUrl;
+                if(state.gasUrl) {
+                    fetchSettingsAndQuestions();
+                }
+            } else {
+                document.getElementById('admin-pin').focus();
+            }
+        };
+
+        // --- UI UTILS ---
+        function showDashboard() {
+            document.getElementById('login-view').classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('dashboard-view').classList.remove('hidden');
+                // trigger fade in
+                document.getElementById('dashboard-view').classList.add('animate-fade-in');
+            }, 500);
+        }
+
+        function showLoading(msg = 'Memproses...') {
+            document.getElementById('loading-text').textContent = msg;
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            document.getElementById('loading-overlay').classList.add('flex');
+        }
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.remove('flex');
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        
+        function toast(msg, type='success') {
+            const container = document.getElementById('alert-container');
+            const el = document.createElement('div');
+            const icon = type === 'success' ? 'fa-circle-check text-emerald-500' : 'fa-triangle-exclamation text-rose-500';
+            const border = type === 'success' ? 'border-emerald-200 bg-white' : 'border-rose-200 bg-white';
+            el.className = `p-4 rounded-2xl border shadow-[0_10px_30px_rgba(0,0,0,0.1)] flex items-center gap-3 text-sm font-bold text-slate-700 transform transition-all duration-300 translate-y-10 opacity-0 pointer-events-auto ${border}`;
+            el.innerHTML = `<div class="w-8 h-8 rounded-full flex items-center justify-center bg-slate-50"><i class="fa-solid ${icon} text-lg"></i></div> <span>${msg}</span>`;
+            container.appendChild(el);
+            setTimeout(() => { el.classList.remove('translate-y-10', 'opacity-0'); }, 10);
+            setTimeout(() => { 
+                el.classList.add('opacity-0', 'translate-x-10'); 
+                setTimeout(() => el.remove(), 300);
+            }, 3000);
+        }
+
+        // --- AUTH ---
+        function verifyPin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-login');
+            const pin = document.getElementById('admin-pin').value;
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifikasi...';
+            
+            setTimeout(() => {
+                if(pin === PIN_CORRECT) {
+                    sessionStorage.setItem('admin_logged_in', 'true');
+                    state.isLoggedIn = true;
+                    showDashboard();
+                    document.getElementById('gas-url').value = state.gasUrl;
+                    if(state.gasUrl) fetchSettingsAndQuestions();
+                } else {
+                    const err = document.getElementById('pin-error');
+                    err.classList.remove('hidden');
+                    document.getElementById('admin-pin').value = '';
+                    setTimeout(() => err.classList.add('hidden'), 3000);
+                    btn.innerHTML = 'Buka Dashboard <i class="fa-solid fa-arrow-right"></i>';
+                }
+            }, 800); // Artificial delay for premium feel
+        }
+        
+        function logout() {
+            sessionStorage.removeItem('admin_logged_in');
+            location.reload();
+        }
+
+        // --- TAB NAVIGATION ---
+        function switchTab(tabId) {
+            document.getElementById('tab-bank').classList.add('hidden');
+            document.getElementById('tab-rekap').classList.add('hidden');
+            
+            // Reset tab styles
+            const btnBank = document.getElementById('tab-btn-bank');
+            const btnRekap = document.getElementById('tab-btn-rekap');
+            
+            btnBank.className = 'flex-1 sm:flex-none px-6 py-2.5 text-sm font-bold rounded-xl bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition';
+            btnRekap.className = 'flex-1 sm:flex-none px-6 py-2.5 text-sm font-bold rounded-xl bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition';
+            
+            // Active tab style
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            activeBtn.className = 'flex-1 sm:flex-none px-6 py-2.5 text-sm font-bold rounded-xl bg-emerald-50 text-emerald-700 transition shadow-sm border border-emerald-100';
+            
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            if(tabId === 'rekap' && state.results.length === 0 && state.gasUrl) {
+                fetchHasilCloud();
+            }
+        }
+
+        // --- GOOGLE DRIVE HELPER ---
+        function formatGoogleDriveUrl(url) {
+            if (!url) return '';
+            if (url.includes('drive.google.com') && url.includes('/d/')) {
+                const matches = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                if (matches && matches[1]) {
+                    return `https://drive.google.com/uc?export=view&id=${matches[1]}`;
+                }
+            }
+            return url;
+        }
+
+        // --- KATEK RENDERER ---
+        function renderMath() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        // --- UPDATE STATS ---
+        function updateStatsDashboard() {
+            document.getElementById('stat-soal').textContent = state.questions.length;
+            document.getElementById('stat-peserta').textContent = state.results.length;
+            if (state.gasUrl) {
+                document.getElementById('stat-server').innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></span> Terhubung';
+                document.getElementById('stat-server').className = 'text-sm font-black text-emerald-600 flex items-center gap-2 mt-1';
+            } else {
+                document.getElementById('stat-server').innerHTML = '<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Putus';
+                document.getElementById('stat-server').className = 'text-sm font-black text-rose-600 flex items-center gap-2 mt-1';
+            }
+        }
+
+        // =====================================
+        // BACKEND FETCH LOGIC (Google Apps Script)
+        // =====================================
+        function saveGasUrlAndSync() {
+            const url = document.getElementById('gas-url').value.trim();
+            if(!url) return toast('URL Web App tidak boleh kosong', 'error');
+            state.gasUrl = url;
+            localStorage.setItem('ipas_gas_url', url);
+            fetchSettingsAndQuestions();
+            toast('Menghubungkan ke server...');
+        }
+
+        async function doFetchGET(action) {
+            if(!state.gasUrl) throw new Error("URL GAS Kosong");
+            const url = `${state.gasUrl}?action=${action}&admin_pin=${PIN_CORRECT}&t=${Date.now()}`;
+            const res = await fetch(url);
+            return await res.json();
+        }
+
+        async function doFetchPOST(payload) {
+            if(!state.gasUrl) throw new Error("URL GAS Kosong");
+            const res = await fetch(state.gasUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            });
+            return await res.json();
+        }
+
+        // --- LOAD DATA ---
+        async function fetchSettingsAndQuestions() {
+            try {
+                showLoading('Mensinkronkan Bank Soal & Pengaturan...');
+                const configMap = await doFetchGET('GET_SETTINGS');
+                updateSettingsUI(configMap);
+                
+                const qData = await doFetchGET(''); 
+                state.questions = Array.isArray(qData) ? qData : [];
+                
+                // Also optimistically fetch results length for stats
+                try {
+                    const rData = await doFetchGET('GET_RESULTS');
+                    if(Array.isArray(rData)) state.results = rData;
+                } catch(e){}
+
+                renderTableBank();
+                updateStatsDashboard();
+                hideLoading();
+            } catch (err) {
+                hideLoading();
+                updateStatsDashboard();
+                toast('Gagal terhubung ke Cloud. Pastikan URL Valid.', 'error');
+            }
+        }
+
+        function updateSettingsUI(configMap) {
+            const cat = state.activeCategory;
+            const conf = configMap[cat] || configMap['ALL'] || {token: 'IPAS2026', shuffleQ: true, shuffleOpt: true};
+            document.getElementById('setting-token').value = conf.token || 'IPAS2026';
+            document.getElementById('setting-acak-soal').checked = conf.shuffleQ !== false;
+            document.getElementById('setting-acak-opsi').checked = conf.shuffleOpt !== false;
+            window.activeConfigMap = configMap; 
+        }
+
+        async function saveSettingsToCloud() {
+            const cat = state.activeCategory;
+            const token = document.getElementById('setting-token').value.toUpperCase();
+            const sq = document.getElementById('setting-acak-soal').checked;
+            const so = document.getElementById('setting-acak-opsi').checked;
+
+            try {
+                showLoading('Menyimpan pengaturan sistem...');
+                const res = await doFetchPOST({
+                    action: 'SAVE_SETTINGS',
+                    pin: PIN_CORRECT,
+                    subtest: cat,
+                    token: token,
+                    shuffleQ: sq,
+                    shuffleOpt: so
+                });
+                hideLoading();
+                if(res.status === 'success') toast('Pengaturan tersimpan & sinkron');
+                else toast(res.message, 'error');
+            } catch(e) {
+                hideLoading();
+                toast('Koneksi terputus saat menyimpan.', 'error');
+            }
+        }
+
+        // =====================================
+        // BANK SOAL LOGIC
+        // =====================================
+        function applyCategoryFilter() {
+            state.activeCategory = document.getElementById('filter-category').value;
+            renderTableBank();
+            if(window.activeConfigMap) updateSettingsUI(window.activeConfigMap);
+        }
+
+        function renderTableBank() {
+            const tbody = document.getElementById('table-bank-body');
+            tbody.innerHTML = '';
+            
+            const filtered = state.activeCategory === 'ALL' ? state.questions : state.questions.filter(q => q.category === state.activeCategory);
+            const totalLabel = document.getElementById('badge-total-soal-label');
+            if(totalLabel) totalLabel.textContent = `${filtered.length} Soal`;
+
+            if(filtered.length === 0) {
+                document.getElementById('bank-empty-state').classList.remove('hidden');
+            } else {
+                document.getElementById('bank-empty-state').classList.add('hidden');
+                filtered.forEach((q, i) => {
+                    let typeBadge = 'bg-teal-100 text-teal-700 border border-teal-200';
+                    let typeStr = 'PG Sederhana';
+                    if(q.type === 'pgk_checkbox') { typeBadge = 'bg-purple-100 text-purple-700 border border-purple-200'; typeStr = 'PG Checkbox'; }
+                    else if(q.type === 'pgk_matrix') { typeBadge = 'bg-amber-100 text-amber-700 border border-amber-200'; typeStr = 'PG Matriks'; }
+
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50 transition group';
+                    tr.innerHTML = `
+                        <td class="p-4 text-center font-bold text-slate-400 group-hover:text-emerald-500 transition">${i+1}</td>
+                        <td class="p-4 font-bold text-slate-700 text-xs">${q.category}</td>
+                        <td class="p-4 text-center"><span class="px-2.5 py-1 rounded-lg text-[10px] font-bold ${typeBadge}">${typeStr}</span></td>
+                        <td class="p-4 min-w-[250px] whitespace-normal text-sm font-medium text-slate-600 line-clamp-2" title="${q.question}">${q.question}</td>
+                        <td class="p-4 text-center font-mono font-black text-emerald-600">${q.correct}</td>
+                        <td class="p-4 text-center space-x-1.5 whitespace-nowrap">
+                            <button onclick="previewSoal('${q.id}')" class="w-8 h-8 inline-flex items-center justify-center bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50 text-sky-600 rounded-lg transition shadow-sm"><i class="fa-solid fa-eye"></i></button>
+                            <button onclick="editSoal('${q.id}')" class="w-8 h-8 inline-flex items-center justify-center bg-white border border-slate-200 hover:border-amber-300 hover:bg-amber-50 text-amber-600 rounded-lg transition shadow-sm"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteSoal('${q.id}')" class="w-8 h-8 inline-flex items-center justify-center bg-white border border-slate-200 hover:border-rose-300 hover:bg-rose-50 text-rose-600 rounded-lg transition shadow-sm"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+            renderMath();
+        }
+
+        // --- FORM ADD/EDIT ---
+        function toggleFormSoalType() {
+            const type = document.getElementById('soal-type').value;
+            document.getElementById('key-pg').classList.add('hidden');
+            document.getElementById('key-checkbox').classList.add('hidden');
+            document.getElementById('key-matrix').classList.add('hidden');
+            
+            if(type === 'pg') document.getElementById('key-pg').classList.remove('hidden');
+            if(type === 'pgk_checkbox') document.getElementById('key-checkbox').classList.remove('hidden');
+            if(type === 'pgk_matrix') document.getElementById('key-matrix').classList.remove('hidden');
+        }
+
+        function resetForm() {
+            document.getElementById('form-soal').reset();
+            document.getElementById('soal-id').value = '';
+            document.getElementById('modal-soal-title').innerHTML = '<i class="fa-solid fa-file-circle-plus text-emerald-500"></i> Buat Soal Baru';
+            if(state.activeCategory !== 'ALL') document.getElementById('soal-category').value = state.activeCategory;
+            toggleFormSoalType();
+        }
+
+        function editSoal(id) {
+            const q = state.questions.find(x => x.id === String(id));
+            if(!q) return;
+            resetForm();
+            document.getElementById('modal-soal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-amber-500"></i> Edit Soal IPAS';
+            document.getElementById('soal-id').value = q.id;
+            document.getElementById('soal-category').value = q.category;
+            document.getElementById('soal-type').value = q.type || 'pg';
+            document.getElementById('soal-weight').value = q.weight || 3;
+            document.getElementById('soal-stimulus').value = q.stimulus || '';
+            document.getElementById('soal-question').value = q.question;
+            document.getElementById('soal-image').value = q.image || '';
+            
+            if(q.options) {
+                document.getElementById('opt-A').value = q.options.A || '';
+                document.getElementById('opt-B').value = q.options.B || '';
+                document.getElementById('opt-C').value = q.options.C || '';
+                document.getElementById('opt-D').value = q.options.D || '';
+                document.getElementById('opt-E').value = q.options.E || '';
+            }
+
+            toggleFormSoalType();
+            
+            const correctStr = String(q.correct || "");
+            if(q.type === 'pg') {
+                document.getElementById('key-pg-select').value = correctStr || 'A';
+            } else if (q.type === 'pgk_checkbox') {
+                const keys = correctStr.split(',');
+                document.querySelectorAll('input[name="key_cb"]').forEach(cb => {
+                    cb.checked = keys.includes(cb.value);
+                });
+            } else if (q.type === 'pgk_matrix') {
+                const keys = correctStr.split(',');
+                if(keys.length === 5) {
+                    document.getElementById('mat-A').value = keys[0];
+                    document.getElementById('mat-B').value = keys[1];
+                    document.getElementById('mat-C').value = keys[2];
+                    document.getElementById('mat-D').value = keys[3];
+                    document.getElementById('mat-E').value = keys[4];
+                }
+            }
+
+            document.getElementById('soal-discussion').value = q.discussion || '';
+            openModal('modal-soal');
+        }
+
+        async function saveSoal(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-save-soal');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+            btn.disabled = true;
+
+            const id = document.getElementById('soal-id').value || ('ipas_' + Date.now());
+            const type = document.getElementById('soal-type').value;
+            
+            let correct = '';
+            if(type === 'pg') {
+                correct = document.getElementById('key-pg-select').value;
+            } else if(type === 'pgk_checkbox') {
+                const cbs = [];
+                document.querySelectorAll('input[name="key_cb"]:checked').forEach(c => cbs.push(c.value));
+                correct = cbs.sort().join(',');
+            } else if(type === 'pgk_matrix') {
+                const arr = ['mat-A', 'mat-B', 'mat-C', 'mat-D', 'mat-E'].map(id => document.getElementById(id).value);
+                correct = arr.join(',');
+            }
+
+            const qObj = {
+                id: id,
+                category: document.getElementById('soal-category').value,
+                type: type,
+                weight: parseInt(document.getElementById('soal-weight').value) || 3,
+                stimulus: document.getElementById('soal-stimulus').value.trim(),
+                question: document.getElementById('soal-question').value.trim(),
+                image: document.getElementById('soal-image').value.trim(),
+                options: {
+                    A: document.getElementById('opt-A').value.trim(),
+                    B: document.getElementById('opt-B').value.trim(),
+                    C: document.getElementById('opt-C').value.trim(),
+                    D: document.getElementById('opt-D').value.trim(),
+                    E: document.getElementById('opt-E').value.trim()
+                },
+                correct: correct,
+                discussion: document.getElementById('soal-discussion').value.trim()
+            };
+
+            try {
+                const res = await doFetchPOST({ action: 'SAVE_QUESTION', pin: PIN_CORRECT, question: qObj });
+                if(res.status === 'success') {
+                    toast('Soal berhasil disimpan ke Database!');
+                    closeModal('modal-soal');
+                    fetchSettingsAndQuestions(); 
+                } else {
+                    toast(res.message, 'error');
+                }
+            } catch(err) {
+                toast('Gagal terhubung ke Cloud.', 'error');
+            } finally {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+        }
+
+        async function deleteSoal(id) {
+            if(!confirm("⚠️ Yakin ingin menghapus soal ini secara permanen dari Cloud? Aksi ini tidak dapat dibatalkan.")) return;
+            try {
+                showLoading('Menghapus soal...');
+                const res = await doFetchPOST({ action: 'DELETE', pin: PIN_CORRECT, id: id });
+                hideLoading();
+                if(res.status === 'success') {
+                    toast('Data soal telah dihapus.');
+                    state.questions = state.questions.filter(x => x.id !== String(id));
+                    renderTableBank();
+                    updateStatsDashboard();
+                } else {
+                    toast(res.message, 'error');
+                }
+            } catch(e) {
+                hideLoading();
+                toast('Koneksi terputus saat menghapus.', 'error');
+            }
+        }
+
+        function previewSoal(id) {
+            const q = state.questions.find(x => x.id === String(id));
+            if(!q) return;
+
+            let html = '';
+            
+            // Header Info
+            html += `<div class="flex justify-between items-center mb-4 border-b border-slate-200 pb-2">
+                        <span class="bg-slate-100 text-slate-600 px-2 py-1 rounded text-[10px] font-bold uppercase">${q.category}</span>
+                        <span class="text-xs font-bold text-amber-600">Bobot: ${q.weight || 3} Poin</span>
+                     </div>`;
+
+            if(q.stimulus) html += `<div class="bg-emerald-50/50 border border-emerald-100 p-4 rounded-xl mb-4 italic text-emerald-900 leading-relaxed">${q.stimulus}</div>`;
+            if(q.image) html += `<img src="${formatGoogleDriveUrl(q.image)}" class="max-h-56 rounded-xl border border-slate-200 mb-4 mx-auto object-contain">`;
+            
+            html += `<p class="font-bold text-base text-slate-800 mb-5 leading-relaxed">${q.question}</p>`;
+            
+            html += `<div class="space-y-2.5">`;
+            ['A','B','C','D','E'].forEach(l => {
+                if(q.options && q.options[l]) {
+                    const isKey = String(q.correct).includes(l) && q.type !== 'pgk_matrix';
+                    const bgClass = isKey ? 'bg-emerald-50 border-emerald-300' : 'bg-white border-slate-200';
+                    html += `<div class="p-3 border rounded-xl flex gap-3 ${bgClass} shadow-sm items-center">
+                                <strong class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 shrink-0">${l}</strong> 
+                                <span class="text-sm font-medium ${isKey ? 'text-emerald-800' : 'text-slate-700'}">${q.options[l]}</span>
+                                ${isKey ? '<i class="fa-solid fa-check text-emerald-500 ml-auto"></i>' : ''}
+                             </div>`;
+                }
+            });
+            html += `</div>`;
+
+            document.getElementById('preview-content').innerHTML = html;
+            document.getElementById('preview-key').textContent = q.correct;
+            document.getElementById('preview-discussion').textContent = q.discussion || 'Belum ada penjelasan / referensi disematkan.';
+            
+            openModal('modal-preview');
+            setTimeout(renderMath, 50); 
+        }
+
+        // =====================================
+        // REKAP HASIL LOGIC
+        // =====================================
+        async function fetchHasilCloud() {
+            try {
+                showLoading('Mensinkronkan nilai ujian dari Cloud...');
+                const data = await doFetchGET('GET_RESULTS');
+                state.results = Array.isArray(data) ? data : [];
+                updateFilterKelas();
+                renderTableHasil();
+                updateStatsDashboard();
+                hideLoading();
+                toast('Data hasil evaluasi diperbarui');
+            } catch (err) {
+                hideLoading();
+                toast('Gagal menarik hasil cloud.', 'error');
+            }
+        }
+
+        function updateFilterKelas() {
+            const sel = document.getElementById('filter-kelas');
+            const current = sel.value;
+            const setCls = new Set();
+            state.results.forEach(r => { if(r.studentClass) setCls.add(r.studentClass); });
+            
+            sel.innerHTML = '<option value="ALL">Semua Kelas</option>';
+            Array.from(setCls).sort().forEach(c => {
+                sel.innerHTML += `<option value="${c}">${c}</option>`;
+            });
+            sel.value = current || 'ALL';
+        }
+
+        function renderTableHasil() {
+            const tbody = document.getElementById('table-rekap-body');
+            tbody.innerHTML = '';
+            const cls = document.getElementById('filter-kelas').value;
+            document.getElementById('print-class-target').textContent = cls === 'ALL' ? 'Semua Kelas' : cls;
+
+            const filtered = cls === 'ALL' ? state.results : state.results.filter(r => r.studentClass === cls);
+
+            if(filtered.length === 0) {
+                document.getElementById('rekap-empty-state').classList.remove('hidden');
+            } else {
+                document.getElementById('rekap-empty-state').classList.add('hidden');
+                filtered.forEach((r, i) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50 transition border-b border-slate-100 group';
+                    
+                    const score = parseFloat(r.score) || 0;
+                    const scoreClass = score < 70 ? 'text-rose-600' : 'text-emerald-600';
+                    
+                    tr.innerHTML = `
+                        <td class="p-4 text-center font-bold text-slate-400 group-hover:text-emerald-500">${i+1}</td>
+                        <td class="p-4 text-xs font-medium text-slate-500">${r.date}</td>
+                        <td class="p-4 font-bold text-slate-800">${r.studentName}</td>
+                        <td class="p-4 text-slate-600 font-semibold text-xs">${r.studentClass}</td>
+                        <td class="p-4 text-slate-500 text-xs">${r.studentMajor}</td>
+                        <td class="p-4 text-slate-500 text-[11px] uppercase">${r.subtest}</td>
+                        <td class="p-4 text-center font-black ${scoreClass} text-lg">${score}</td>
+                        <td class="p-4 text-center no-print w-20">
+                            <button onclick="deleteResult('${r.studentName}', '${r.subtest}')" class="w-8 h-8 inline-flex items-center justify-center bg-white border border-slate-200 hover:border-rose-300 hover:bg-rose-50 text-rose-500 rounded-lg transition shadow-sm" title="Hapus"><i class="fa-solid fa-trash-can"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        async function deleteResult(name, subtest) {
+            if(!confirm(`Yakin ingin menghapus rekam nilai peserta "${name}"?`)) return;
+            try {
+                showLoading('Menghapus data peserta...');
+                const res = await doFetchPOST({ action: 'DELETE_RESULT', pin: PIN_CORRECT, studentName: name, subtest: subtest });
+                hideLoading();
+                if(res.status === 'success') {
+                    toast('Rekam nilai berhasil dihapus.');
+                    state.results = state.results.filter(r => !(r.studentName === name && r.subtest === subtest));
+                    renderTableHasil();
+                    updateStatsDashboard();
+                } else {
+                    toast(res.message, 'error');
+                }
+            } catch(e) {
+                hideLoading();
+                toast('Gagal menghapus data ke Cloud.', 'error');
+            }
+        }
+
+        // --- GLOBAL EVENTS ---
+        document.getElementById('modal-soal').addEventListener('mousedown', (e) => {
+            if(e.target.id === 'modal-soal') closeModal('modal-soal');
+        });
+        document.getElementById('modal-preview').addEventListener('mousedown', (e) => {
+            if(e.target.id === 'modal-preview') closeModal('modal-preview');
+        });
+
+    </script>
+</body>
+</html>
